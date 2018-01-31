@@ -1,0 +1,78 @@
+## load the diamonds data set
+```{r}
+library(ggplot2)
+data("diamonds")
+```
+
+## You should notice that the diamonds data set will be listed as a 'Promise' in the workspace. This is a special object in R, and you need to run a command on the data to fully load the data set. Try running a summary:
+```{r}
+summary(diamonds)
+```
+## You can learn more about the diamonds data set by typing
+```{r}
+?diamonds
+diamonds$color
+```
+
+# Create a histogram of the price of
+# all the diamonds in the diamond data set.
+```{r}
+ggplot(data = diamonds, aes(x = diamonds$price)) +
+  geom_histogram(bins = 400)
+
+summary(diamonds$price)
+```
+## Diamonds Counts
+```{r}
+summary(diamonds$price<500)
+summary(diamonds$price<250)
+summary(diamonds$price>15000)
+```
+
+## Cheaper diamonds
+```{r}
+ggplot(diamonds, aes(x = diamonds$price)) +
+  geom_histogram(bins = 10) +
+  scale_x_continuous(limits = c(0, 2000))
+ggsave("priceHistogram.png")
+```
+## Price by Cut Histograms
+```{r}
+ggplot(diamonds, aes(x = diamonds$price)) +
+  geom_histogram(bins = 30) +
+  scale_x_continuous(limits = c(0, 20000)) + 
+  facet_wrap(~cut, scales='free')
+ggsave("priceHistogram by cut.png")
+```
+
+## Price per carat
+```{r}
+ggplot(diamonds, aes(x = price/carat)) +
+  geom_histogram(bins=30) +
+  facet_wrap(~cut, scales = "free") +
+  scale_x_log10()
+```
+
+## Price box plot
+```{r}
+ggplot(diamonds, aes(x=color, y = price)) +
+  geom_boxplot() +
+  coord_cartesian(ylim = c(0, 8000))
+by(diamonds$price, diamonds$color, summary)
+IQR(subset(diamonds, color=='D')$price)
+IQR(subset(diamonds, color=='J')$price)
+```
+
+## Price per carat box plot by color
+
+```{r}
+ggplot(diamonds, aes(x=color, y=price/carat)) +
+  geom_boxplot() +
+  coord_cartesian(ylim = c(0, 7000))
+```
+## Carat frequency polygon
+```{r}
+ggplot(aes(x=price), data=diamonds) +
+  geom_freqpoly(aes(color=carat))
+```
+
